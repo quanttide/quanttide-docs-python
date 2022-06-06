@@ -1,0 +1,81 @@
+"""
+书籍(Book)数据模型
+"""
+import tempfile
+from contextlib import AbstractContextManager
+from typing import Union
+
+from quanttide_docs.models.git import BookRepo
+
+
+class Book(AbstractContextManager):
+    """
+    书籍数据模型
+    """
+    def __init__(self, remote_url):
+        """
+        :param remote_url: Git仓库地址。
+        """
+        self.remote_url = remote_url
+
+    def __enter__(self):
+        """
+        下载教程仓库到临时文件夹
+        :return:
+        """
+        # 存储仓库的临时文件夹
+        # https://docs.python.org/zh-cn/3/library/tempfile.html#tempfile.TemporaryDirectory
+        self.dir = tempfile.TemporaryDirectory()
+        # clone仓库到临时文件夹
+        self.repo = BookRepo.clone_from(self.remote_url, to_path=self.dir.name)
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback) -> Union[bool, None]:
+        """
+        关闭上下文管理器
+
+        处理过程：
+          1. 清理临时文件夹
+
+        TODO:
+          - 完善异常捕获
+
+        :param exc_type:
+        :param exc_value:
+        :param traceback:
+        :return:
+          - True: raise
+          - False or None: ignore
+        """
+        # 显式清理临时文件夹
+        self.dir.cleanup()
+        return None
+
+    @property
+    def created_at(self) -> str:
+        """
+        定义first commit时间为仓库创建时间。
+
+        :return: ISO格式的时间，比如`2021-04-29T19:01:37+08:00`。
+        """
+        first_commit = next(self.repo.iter_commits(reverse=True))
+        return first_commit.committed_datetime.isoformat()
+
+    @property
+    def updated_at(self) -> str:
+        """
+        定义latest commit为仓库最近更新时间。
+
+        :return: ISO格式的时间，比如`2021-04-29T19:01:37+08:00`。
+        """
+        latest_commit = next(self.repo.iter_commits())
+        return latest_commit.committed_datetime.isoformat()
+
+    def get_version_created_at(self, version: str):
+        """
+        获取版本创建时间。
+
+        :param version: 语义化版本格式的Git标签。
+        :return:
+        """
+        pass
