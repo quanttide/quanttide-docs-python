@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 # name it as your package name
-name = "python-package-template"
+name = "quanttide-docs-python"
 # semetric versions
 version = "0.1.0-alpha.1"
 # describe the package within one sentence
-description = "Python Package Template"
+description = "量潮文档Python工具包"
 authors = [{name = "QuantTide Inc.", email = "opensource@quanttide.com"}]
 classifiers = [
     "Programming Language :: Python :: 3",
