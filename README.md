@@ -1,3 +1,3 @@
 # quanttide-docs-python
 
-量潮文档Python工具库
+量潮文档Python工具包
