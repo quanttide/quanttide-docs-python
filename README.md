@@ -1,2 +1,3 @@
-# Python Package Template
+# quanttide-docs-python
 
+量潮文档Python工具库
