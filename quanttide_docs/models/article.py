@@ -23,14 +23,13 @@ class Article(AbstractContextManager):
     @property
     def name(self) -> str:
         """
-        URL路径格式的文章名称，作为唯一性标识。解析文件名并转为URL格式。
-
-        TODO:
-          - 规范统一建模语言对此变量的定义
+        文章名称。
+        - 作为唯一性标识。
+        - 解析文件名并转为URL格式，用作URLPattern的拼接。
 
         Ref:
           - https://www.contentstack.com/docs/developers/create-content-types/understand-default-url-pattern/
-        :return: 文章ID。比如`url-path`，来自于文件名`1_url_path`。
+        :return: 文章ID。比如`article-name`，来自于文件名`1_article_name`或者`article_name`。
         """
         splits = self.blob.path.split('_', 1)
         return (splits[1] if splits[0].isnumeric() else self.path).replace('_', '-')

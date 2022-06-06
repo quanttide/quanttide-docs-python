@@ -5,6 +5,8 @@ import tempfile
 from contextlib import AbstractContextManager
 from typing import Union
 
+from git.objects.util import from_timestamp
+
 from quanttide_docs.models.git import BookRepo
 
 
@@ -47,6 +49,8 @@ class Book(AbstractContextManager):
           - True: raise
           - False or None: ignore
         """
+        # 关闭仓库
+        self.repo.close()
         # 显式清理临时文件夹
         self.dir.cleanup()
         return None
@@ -73,9 +77,10 @@ class Book(AbstractContextManager):
 
     def get_version_created_at(self, version: str):
         """
-        获取版本创建时间。
+        获取版本创建时间。定义Git标签创建时间为书籍版本创建时间。
 
         :param version: 语义化版本格式的Git标签。
-        :return:
+        :return: ISO格式的时间，比如`2022-05-27T21:47:55`
         """
-        pass
+        tag_object = self.repo.tag(version).tag
+        return from_timestamp(tag_object.tagged_date, tag_object.tagger_tz_offset).isoformat()
