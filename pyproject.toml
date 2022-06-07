@@ -17,6 +17,9 @@ requires-python = '>=3'
 dependencies = [
     "dynaconf",
     "gitpython",
+    "yaml",
+    "markdown",
+    "markdown-full-yaml-metadata",
 ]
 # dynamic = ["version"]
 

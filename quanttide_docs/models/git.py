@@ -5,6 +5,13 @@
 from git import Repo
 
 
+class ArticleBlob(object):
+    """
+    TODO：绑定Git仓库的tree、blob、commits，用以初始化Article数据模型。
+    """
+    pass
+
+
 class BookRepo(Repo):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -21,11 +28,3 @@ class BookRepo(Repo):
         :return:
         """
         self.git.checkout(version)
-
-    def log(self, path):
-        """
-
-        :param path:
-        :return:
-        """
-        self.git.log(path)

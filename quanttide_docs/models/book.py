@@ -1,11 +1,14 @@
 """
 书籍(Book)数据模型
 """
+
+import os
 import tempfile
 from contextlib import AbstractContextManager
 from typing import Union
 
 from git.objects.util import from_timestamp
+import yaml
 
 from quanttide_docs.models.git import BookRepo
 
@@ -19,6 +22,8 @@ class Book(AbstractContextManager):
         :param remote_url: Git仓库地址。
         """
         self.remote_url = remote_url
+        self.config_path = '_config.yml'
+        self.toc_path = '_toc.yml'
 
     def __enter__(self):
         """
@@ -30,6 +35,10 @@ class Book(AbstractContextManager):
         self.dir = tempfile.TemporaryDirectory()
         # clone仓库到临时文件夹
         self.repo = BookRepo.clone_from(self.remote_url, to_path=self.dir.name)
+        # config文件
+        self.config_abspath = os.path.join(self.dir.name, self.config_path)
+        # toc文件
+        self.toc_abspath = os.path.join(self.dir.name, self.toc_path)
         return self
 
     def __exit__(self, exc_type, exc_value, traceback) -> Union[bool, None]:
@@ -84,3 +93,21 @@ class Book(AbstractContextManager):
         """
         tag_object = self.repo.tag(version).tag
         return from_timestamp(tag_object.tagged_date, tag_object.tagger_tz_offset).isoformat()
+
+    @property
+    def config(self) -> dict:
+        """
+        配置
+        :return:
+        """
+        with open(self.config_abspath) as f:
+            config = yaml.safe_load(f)
+        return config
+
+    @property
+    def toc(self):
+        """
+        目录(Table of Content)
+        :return:
+        """
+        return ''

@@ -16,19 +16,22 @@ class BookTestCase(unittest.TestCase):
         with Book(remote_url=self.remote_url) as book:
             self.assertFalse(book.repo.bare)
 
-    @unittest.skip('TODO: 补充验证正则')
     def test_get_created_at(self):
         with Book(remote_url=self.remote_url) as book:
-            self.assertRegex(book.created_at, r'')
+            self.assertRegex(book.created_at, settings.DATETIME_FORMAT)
 
     def test_get_updated_at(self):
         with Book(remote_url=self.remote_url) as book:
-            # TODO: 改为验证格式
-            self.assertEqual('2022-05-27T21:47:09+08:00', book.updated_at)
+            self.assertRegex(book.updated_at, settings.DATETIME_FORMAT)
 
     def test_get_version_created_at(self):
         with Book(remote_url=self.remote_url) as book:
-            self.assertEqual('2022-05-27T21:47:55+08:00', book.get_version_created_at('0.1.0'))
+            self.assertRegex(book.get_version_created_at('0.1.0'), settings.DATETIME_FORMAT)
+
+    def test_config(self):
+        with Book(remote_url=self.remote_url) as book:
+            self.assertTrue(hasattr(book, 'config'))
+            print(book.config)
 
 
 if __name__ == '__main__':
