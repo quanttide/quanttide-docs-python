@@ -4,6 +4,7 @@ import unittest
 from quanttide_docs.utils import *
 
 
+@unittest.skip("TODO")
 class AutodiscoverYamlFileTestCase(unittest.TestCase):
     def setUp(self):
         self.dir = tempfile.TemporaryDirectory()

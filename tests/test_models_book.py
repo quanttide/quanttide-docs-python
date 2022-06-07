@@ -16,11 +16,11 @@ class BookTestCase(unittest.TestCase):
         with Book(remote_url=self.remote_url) as book:
             self.assertFalse(book.repo.bare)
 
-    def test_get_created_at(self):
+    def test_created_at(self):
         with Book(remote_url=self.remote_url) as book:
             self.assertRegex(book.created_at, settings.DATETIME_FORMAT)
 
-    def test_get_updated_at(self):
+    def test_updated_at(self):
         with Book(remote_url=self.remote_url) as book:
             self.assertRegex(book.updated_at, settings.DATETIME_FORMAT)
 
@@ -32,6 +32,11 @@ class BookTestCase(unittest.TestCase):
         with Book(remote_url=self.remote_url) as book:
             self.assertTrue(hasattr(book, 'config'))
             print(book.config)
+
+    def test_articles(self):
+        with Book(remote_url=self.remote_url) as book:
+            self.assertTrue(hasattr(book, 'articles'))
+            print(book.articles)
 
 
 if __name__ == '__main__':

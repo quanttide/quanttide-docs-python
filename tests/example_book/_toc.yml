@@ -1,0 +1,6 @@
+format: jb-book
+root: README.md
+chapters:
+  - file: 1_example_chapter/README.md
+    sections:
+      - file: 1_example_chapter/1_example_article.md

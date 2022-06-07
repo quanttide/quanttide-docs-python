@@ -11,6 +11,7 @@ from git.objects.util import from_timestamp
 import yaml
 
 from quanttide_docs.models.git import BookRepo
+from quanttide_docs.models.toc import TOC
 
 
 class Book(AbstractContextManager):
@@ -105,9 +106,9 @@ class Book(AbstractContextManager):
         return config
 
     @property
-    def toc(self):
+    def articles(self):
         """
-        目录(Table of Content)
+        文章列表
         :return:
         """
-        return ''
+        pass
