@@ -3,3 +3,6 @@
 """
 
 from .book import Book
+from .article import Article
+from .toc import TOC
+from .git import BookRepo

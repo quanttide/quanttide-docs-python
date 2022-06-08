@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 # name it as your package name
 name = "quanttide-docs-python"
 # semetric versions
-version = "0.1.0-beta.2"
+version = "0.1.0-beta.3"
 # describe the package within one sentence
 description = "量潮文档Python工具包"
 authors = [{name = "QuantTide Inc.", email = "opensource@quanttide.com"}]
