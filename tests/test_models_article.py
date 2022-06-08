@@ -33,6 +33,13 @@ class ArticleTestCase(unittest.TestCase):
 
     def test_name(self):
         with Article(self.abspath, self.commits) as article:
+            # 1_hello_world
+            self.assertEqual('hello-world', article.name)
+            # hello_world
+            article.abspath = 'hello_world'
+            self.assertEqual('hello-world', article.name)
+            # Hello_World
+            article.abspath = 'Hello_World'
             self.assertEqual('hello-world', article.name)
 
     def test_created_at(self):

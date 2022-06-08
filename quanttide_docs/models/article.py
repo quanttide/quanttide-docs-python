@@ -46,7 +46,7 @@ class Article(AbstractContextManager):
         """
         basename = os.path.splitext(os.path.basename(self.abspath))[0]
         splits = basename.split('_', 1)
-        return (splits[1] if splits[0].isnumeric() else basename.path).replace('_', '-').lower()
+        return (splits[1] if splits[0].isnumeric() else basename).replace('_', '-').lower()
 
     @property
     def created_at(self):
