@@ -75,6 +75,9 @@ class Book(AbstractContextManager):
         first_commit = next(self.repo.iter_commits(reverse=True))
         return first_commit.committed_datetime.isoformat()
 
+    def checkout_version(self, version):
+        self.repo.git.checkout(version)
+
     @property
     def updated_at(self) -> str:
         """

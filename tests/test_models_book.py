@@ -16,6 +16,12 @@ class BookTestCase(unittest.TestCase):
         with Book(remote_url=self.remote_url) as book:
             self.assertFalse(book.repo.bare)
 
+    def test_checkout_version(self):
+        with Book(remote_url=self.remote_url) as book:
+            book.checkout_version('0.1.0')
+            # https://gitpython.readthedocs.io/en/stable/reference.html#git.refs.head.Head
+            self.assertEqual('e8f53c9f0521a58eb891cb74ab47c7ec9b96ea27', book.repo.head.commit.hexsha)
+
     def test_created_at(self):
         with Book(remote_url=self.remote_url) as book:
             self.assertRegex(book.created_at, settings.DATETIME_FORMAT)
