@@ -5,11 +5,13 @@
 import os
 import tempfile
 from contextlib import AbstractContextManager
-from typing import Union
+from typing import Union, List
+from warnings import warn
 
 from git.objects.util import from_timestamp
 import yaml
 
+from quanttide_docs.models.article import Article
 from quanttide_docs.models.git import BookRepo
 from quanttide_docs.models.toc import TOC
 
@@ -18,6 +20,7 @@ class Book(AbstractContextManager):
     """
     书籍数据模型
     """
+
     def __init__(self, remote_url):
         """
         :param remote_url: Git仓库地址。
@@ -109,9 +112,27 @@ class Book(AbstractContextManager):
         return config
 
     @property
-    def articles(self):
+    def toc(self) -> List[dict]:
+        # https://stackoverflow.com/questions/9885217/in-python-if-i-return-inside-a-with-block-will-the-file-still-close
+        with TOC(self.toc_abspath) as toc_model:
+            return toc_model.parse()
+
+    @property
+    def articles(self) -> List[dict]:
         """
         文章列表
         :return:
         """
-        pass
+        articles = []
+        for item in self.toc:
+            file_path = item.pop('file_path')
+            file_abspath = os.path.join(self.dir.name, file_path)
+            if not os.path.exists(file_abspath):
+                warn(f"TOC文件中配置的`{file_path}`不存在，请检查文件配置是否正确。")
+                continue
+            with Article(file_abspath, self.repo.iter_commits(paths=[file_abspath])) as article_model:
+                item.update({'name': article_model.name, 'created_at': article_model.created_at,
+                             'updated_at': article_model.updated_at, 'title': article_model.title,
+                             'meta': article_model.meta, 'content': article_model.content})
+                articles.append(item)
+        return articles
