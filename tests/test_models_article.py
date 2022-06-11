@@ -57,6 +57,11 @@ class ArticleTestCase(unittest.TestCase):
             self.assertTrue(hasattr(article, 'meta'))
             print(article.meta)
 
+    def test_title(self):
+        with Article(self.abspath, self.commits) as article:
+            self.assertTrue(article.title)
+            self.assertEqual(article.title, '输入和输出')
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -4,6 +4,7 @@
 
 import os.path
 from contextlib import AbstractContextManager
+from typing import Optional
 
 import markdown
 
@@ -69,12 +70,25 @@ class Article(AbstractContextManager):
     @property
     def meta(self) -> dict:
         """
-        解析MyST Markdown文件头部元数据为课时元信息。
+        解析MyST Markdown文件头部元数据为文章元信息。
         :return:
         """
         md_parser = markdown.Markdown(extensions=['full_yaml_metadata'])
         md_parser.convert(self.raw)
         return md_parser.Meta
+
+    @property
+    def title(self) -> Optional[str]:
+        """
+        解析首个一级标题为文章标题
+
+        比如meta后的第一个有文字的行为`# 输入和输出`，结果为`输入和输出`。
+        :return:
+        """
+        for line in self.raw.split('\n'):
+            if line.startswith('#') and line.count('#') == 1:
+                return line.replace('# ', '')
+        return None
 
     @property
     def content(self):
