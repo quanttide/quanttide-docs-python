@@ -26,12 +26,24 @@ class TOC(AbstractContextManager):
         return dict(part_no=part_no, chapter_no=chapter_no, section_no=section_no, subsection_no=subsection_no,
                     is_readme=is_readme, file_path=file_path)
 
+    def parse_subsections(self, subsections: list, section_no, chapter_no, part_no=None):
+        result = []
+        for j, subsection in enumerate(subsections):
+            subsection_no = j + 1
+            result.append(
+                self.generate_course_content_item(part_no=part_no, chapter_no=chapter_no, section_no=section_no,
+                                                  subsection_no=subsection_no, file_path=subsection['file']))
+        return result
+
     def parse_sections(self, sections: list, chapter_no, part_no=None):
         result = []
         for i, section in enumerate(sections):
             section_no = i + 1
             result.append(self.generate_course_content_item(part_no=part_no, chapter_no=chapter_no, section_no=section_no,
                                                             file_path=section['file']))
+            # subsections
+            if 'sections' in section:
+                result.extend(self.parse_subsections(section['sections'], section_no, chapter_no, part_no))
         return result
 
     def parse_chapters(self, chapters: list, part_no=None, chapter_no_add=0):
