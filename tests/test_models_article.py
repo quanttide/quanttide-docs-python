@@ -41,6 +41,9 @@ class ArticleTestCase(unittest.TestCase):
             # Hello_World
             article.abspath = 'Hello_World'
             self.assertEqual('hello-world', article.name)
+            # README.md
+            article.abspath = '1_hello_world/README.md'
+            self.assertEqual('hello-world', article.name)
 
     def test_created_at(self):
         with Article(self.abspath, self.commits) as article:
