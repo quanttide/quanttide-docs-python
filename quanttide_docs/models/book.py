@@ -21,11 +21,16 @@ class Book(AbstractContextManager):
     书籍数据模型
     """
 
-    def __init__(self, remote_url):
+    def __init__(self, remote_url=None, local_path=None):
         """
         :param remote_url: Git仓库地址。
         """
+        if remote_url is None and local_path is None:
+            raise ValueError('remote_url或者local_path必填一个。')
+        if remote_url and local_path:
+            raise ValueError('remote_url或者local_path只能填一个。')
         self.remote_url = remote_url
+        self.local_path = local_path
         self.config_path = '_config.yml'
         self.toc_path = '_toc.yml'
 
@@ -38,7 +43,10 @@ class Book(AbstractContextManager):
         # https://docs.python.org/zh-cn/3/library/tempfile.html#tempfile.TemporaryDirectory
         self.dir = tempfile.TemporaryDirectory()
         # clone仓库到临时文件夹
-        self.repo = BookRepo.clone_from(self.remote_url, to_path=self.dir.name)
+        if self.remote_url:
+            self.repo = BookRepo.clone_from(self.remote_url, to_path=self.dir.name)
+        else:
+            self.repo = BookRepo(self.local_path).clone(path=self.dir.name)
         # config文件
         self.config_abspath = os.path.join(self.dir.name, self.config_path)
         # toc文件
@@ -98,6 +106,8 @@ class Book(AbstractContextManager):
         :param version: 语义化版本格式的Git标签。
         :return: ISO格式的时间，比如`2022-05-27T21:47:55`
         """
+        if not version:
+            raise ValueError('version非空')
         tag_object = self.repo.tag(version).tag
         return from_timestamp(tag_object.tagged_date, tag_object.tagger_tz_offset).isoformat()
 

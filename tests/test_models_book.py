@@ -7,13 +7,28 @@ from quanttide_docs.config import settings
 class BookTestCase(unittest.TestCase):
     def setUp(self):
         self.remote_url = settings.TEST_REMOTE_URL
+        self.local_path = settings.TEST_LOCAL_PATH
 
-    def test_init(self):
+    def test_init_remote(self):
         book = Book(remote_url=self.remote_url)
         self.assertTrue(book)
 
+    def test_init_local(self):
+        book = Book(local_path=self.local_path)
+        self.assertTrue(book)
+
+    def test_init_error(self):
+        with self.assertRaises(ValueError) as e:
+            book = Book()
+        with self.assertRaises(ValueError) as e:
+            book = Book(remote_url=self.remote_url, local_path=self.local_path)
+
     def test_context_manager(self):
         with Book(remote_url=self.remote_url) as book:
+            self.assertFalse(book.repo.bare)
+
+    def test_context_manager_for_local(self):
+        with Book(local_path=self.local_path) as book:
             self.assertFalse(book.repo.bare)
 
     def test_checkout_version(self):
