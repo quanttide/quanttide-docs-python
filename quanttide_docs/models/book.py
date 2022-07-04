@@ -87,6 +87,13 @@ class Book(AbstractContextManager):
         return first_commit.committed_datetime.isoformat()
 
     def checkout_version(self, version):
+        """
+        TODO：
+          - 验证version格式为语义化版本，以防止意料之外的操作。
+          - 拓展对version的定义包括tag和commit。
+        :param version:
+        :return:
+        """
         self.repo.git.checkout(version)
 
     @property
