@@ -141,5 +141,3 @@ cython_debug/
 .vscode/
 .idea/
 
-# 项目数据文件
-/examples/repo/

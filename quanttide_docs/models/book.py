@@ -34,6 +34,45 @@ class Book(AbstractContextManager):
         self.config_path = '_config.yml'
         self.toc_path = '_toc.yml'
 
+    @classmethod
+    def init_from_github(cls, depot_name):
+        """
+        GitHub仓库初始化。
+
+        假设GitHub仓库为公开仓库。
+        :param depot_name:
+        :return:
+        """
+        remote_url = f'https://github.com/quanttide/{depot_name}.git'
+        return cls(remote_url=remote_url)
+
+    @classmethod
+    def init_from_coding_devops(cls, project_name, depot_name, username=None, password=None):
+        """
+        Coding仓库初始化。
+
+        假设Coding仓库为私有仓库，需要账号密码访问。
+
+        :param project_name:
+        :param depot_name:
+        :param username:
+        :param password:
+        :return:
+        """
+        if not username or not password:
+            raise ValueError("username 和 password 非空。")
+        remote_url = f'https://{username}:{password}@e.coding.net/quanttide/{project_name}/{depot_name}.git'
+        return cls(remote_url=remote_url)
+
+    @classmethod
+    def init_from_local_repo(cls, local_path):
+        """
+
+        :param local_path:
+        :return:
+        """
+        return cls(local_path=local_path)
+
     def __enter__(self):
         """
         下载教程仓库到临时文件夹

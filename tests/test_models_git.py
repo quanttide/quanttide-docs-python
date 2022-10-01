@@ -19,7 +19,7 @@ class BookRepoTestCase(unittest.TestCase):
     def test_checkout_version(self):
         self.book_repo.checkout_version('0.1.0')
         # https://gitpython.readthedocs.io/en/stable/reference.html#git.refs.head.Head
-        self.assertEqual('e8f53c9f0521a58eb891cb74ab47c7ec9b96ea27', self.book_repo.head.commit.hexsha)
+        self.assertEqual('545e05c0a3a255afa0c69c4b2fd6734940517171', self.book_repo.head.commit.hexsha)
 
 
 if __name__ == '__main__':

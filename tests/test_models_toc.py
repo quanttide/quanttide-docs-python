@@ -33,12 +33,6 @@ class TOCTestCase(unittest.TestCase):
             self.assertTrue(result)
             pprint(result)
 
-    def test_parse_with_parts(self):
-        with TOC('example_book/_toc_with_parts.yml') as toc:
-            result = toc.parse()
-            self.assertTrue(result)
-            pprint(result)
-
 
 if __name__ == '__main__':
     unittest.main()

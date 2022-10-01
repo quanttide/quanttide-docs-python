@@ -1,8 +1,0 @@
-# https://jupyterbook.org/en/stable/customize/config.html
-title: Python编程教程
-author: 量潮科技
-description: Python语言和编程入门到进阶
-level: introductory
-stage: dev
-tags:
-  - python
