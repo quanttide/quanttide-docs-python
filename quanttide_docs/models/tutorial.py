@@ -11,7 +11,7 @@ class Tutorial(Book):
     """
     教程数据模型
     """
-    def validate(self) -> bool:
+    def is_valid(self) -> bool:
         # 验证lecture_name唯一
         lecture_names = [article['name'] for article in self.articles]
         # TODO：指路具体错误位置。

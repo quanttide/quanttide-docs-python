@@ -23,10 +23,10 @@ class TutorialsTestCase(unittest.TestCase):
         with self.assertRaises(ValueError):
             book = Tutorial(remote_url=self.remote_url, local_path=self.local_path)
 
-    def test_validate(self):
+    def test_is_valid(self):
         with Tutorial(local_path=self.local_path) as tutorials:
             tutorials.checkout_version('0.1.0')
-            self.assertTrue(tutorials.validate())
+            self.assertTrue(tutorials.is_valid())
 
     def test_to_dict(self):
         with Tutorial(local_path=self.local_path) as tutorials:
