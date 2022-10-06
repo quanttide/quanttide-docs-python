@@ -14,6 +14,7 @@ import yaml
 from quanttide_docs.models.article import Article
 from quanttide_docs.models.git import BookRepo
 from quanttide_docs.models.toc import TOC
+from quanttide_docs.utils import autodiscover_yaml_file
 
 
 class Book(AbstractContextManager):
@@ -31,8 +32,8 @@ class Book(AbstractContextManager):
             raise ValueError('remote_url或者local_path只能填一个。')
         self.remote_url = remote_url
         self.local_path = local_path
-        self.config_path = '_config.yml'
-        self.toc_path = '_toc.yml'
+        self.config_file_prefix = '_config'
+        self.toc_file_prefix = '_toc'
 
     @classmethod
     def init_from_github(cls, depot_name):
@@ -80,16 +81,19 @@ class Book(AbstractContextManager):
         """
         # 存储仓库的临时文件夹
         # https://docs.python.org/zh-cn/3/library/tempfile.html#tempfile.TemporaryDirectory
-        self.dir = tempfile.TemporaryDirectory()
+        if os.name == 'nt':
+            self.dir = tempfile.TemporaryDirectory(dir=os.path.abspath('.'))
+        else:
+            self.dir = tempfile.TemporaryDirectory()
         # clone仓库到临时文件夹
         if self.remote_url:
             self.repo = BookRepo.clone_from(self.remote_url, to_path=self.dir.name)
         else:
             self.repo = BookRepo(self.local_path).clone(path=self.dir.name)
         # config文件
-        self.config_abspath = os.path.join(self.dir.name, self.config_path)
+        self.config_abspath = autodiscover_yaml_file(self.dir.name, self.config_file_prefix)
         # toc文件
-        self.toc_abspath = os.path.join(self.dir.name, self.toc_path)
+        self.toc_abspath = autodiscover_yaml_file(self.dir.name, self.toc_file_prefix)
         return self
 
     def __exit__(self, exc_type, exc_value, traceback) -> Union[bool, None]:
@@ -163,7 +167,7 @@ class Book(AbstractContextManager):
         配置
         :return:
         """
-        with open(self.config_abspath) as f:
+        with open(self.config_abspath, encoding='utf-8') as f:
             config = yaml.safe_load(f)
         return config
 
@@ -186,7 +190,7 @@ class Book(AbstractContextManager):
             if not os.path.exists(file_abspath):
                 warn(f"TOC文件中配置的`{file_path}`不存在，请检查文件配置是否正确。")
                 continue
-            with Article(file_abspath, self.repo.iter_commits(paths=[file_abspath])) as article_model:
+            with Article(file_abspath, self.repo.iter_commits(paths=[file_path])) as article_model:
                 item.update({'name': article_model.name, 'created_at': article_model.created_at,
                              'updated_at': article_model.updated_at, 'title': article_model.title,
                              'meta': article_model.meta, 'content': article_model.content})

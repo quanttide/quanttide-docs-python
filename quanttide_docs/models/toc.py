@@ -12,7 +12,7 @@ class TOC(AbstractContextManager):
         self.abspath = abspath
 
     def __enter__(self):
-        self.fp = open(self.abspath, 'r')
+        self.fp = open(self.abspath, 'r', encoding='utf-8')
         self.raw_data = yaml.safe_load(self.fp)
         return self
 
