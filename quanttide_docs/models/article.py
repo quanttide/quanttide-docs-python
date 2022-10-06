@@ -25,7 +25,7 @@ class Article(AbstractContextManager):
         self.commits = tuple(commits)  # generator -> tuple
 
     def __enter__(self):
-        self.fp = open(self.abspath, 'r')
+        self.fp = open(self.abspath, 'r', encoding='utf-8')
         self.raw = self.fp.read()
         return self
 
@@ -99,4 +99,17 @@ class Article(AbstractContextManager):
         TODO: 根据业务系统需要进行优化
         :return:
         """
+        lines = self.raw.split('\n')
+        if lines[0] == '---':
+            lines_enumerate = enumerate(lines)
+            next(lines_enumerate)
+            for i, line in lines_enumerate:
+                if line in ('---', '...'):
+                    lines = lines[i + 1:]
+                    break
+                if line.startswith('#') and line.count('#') == 1:
+                    return '\n'.join(lines[i + 1:])
+        for i, line in enumerate(lines):
+            if line.startswith('#') and line.count('#') == 1:
+                return '\n'.join(lines[i + 1:])
         return self.raw

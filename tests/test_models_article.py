@@ -1,6 +1,8 @@
 """
 文章领域模型测试
 """
+
+import os
 import tempfile
 import unittest
 
@@ -11,7 +13,10 @@ from quanttide_docs.config import settings
 
 class ArticleTestCase(unittest.TestCase):
     def setUp(self):
-        self.dir = tempfile.TemporaryDirectory()
+        if os.name == 'nt':
+            self.dir = tempfile.TemporaryDirectory(dir=os.path.abspath('.'))
+        else:
+            self.dir = tempfile.TemporaryDirectory()
         self.repo = BookRepo.clone_from(settings.TEST_REMOTE_URL, to_path=self.dir.name)
         self.path = '1_example_chapter/1_example_section/1_example_article.md'
         self.blob = self.repo.tree()[self.path]
@@ -64,6 +69,10 @@ class ArticleTestCase(unittest.TestCase):
         with Article(self.abspath, self.commits) as article:
             self.assertTrue(article.title)
             self.assertEqual(article.title, '测试文章')
+
+    def test_content(self):
+        with Article(self.abspath, self.commits) as article:
+            self.assertEqual(article.content, '')
 
 
 if __name__ == '__main__':
