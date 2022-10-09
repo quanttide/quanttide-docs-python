@@ -82,7 +82,7 @@ class Book(AbstractContextManager):
         # 存储仓库的临时文件夹
         # https://docs.python.org/zh-cn/3/library/tempfile.html#tempfile.TemporaryDirectory
         if os.name == 'nt':
-            self.dir = tempfile.TemporaryDirectory(dir=os.path.abspath('.'))
+            self.dir = tempfile.TemporaryDirectory(dir=os.path.expandvars(r'%SYSTEMROOT%\Temp'))
         else:
             self.dir = tempfile.TemporaryDirectory()
         # clone仓库到临时文件夹

@@ -14,7 +14,7 @@ from quanttide_docs.config import settings
 class ArticleTestCase(unittest.TestCase):
     def setUp(self):
         if os.name == 'nt':
-            self.dir = tempfile.TemporaryDirectory(dir=os.path.abspath('.'))
+            self.dir = tempfile.TemporaryDirectory(dir=os.path.expandvars(r'%SYSTEMROOT%\Temp'))
         else:
             self.dir = tempfile.TemporaryDirectory()
         self.repo = BookRepo.clone_from(settings.TEST_REMOTE_URL, to_path=self.dir.name)
