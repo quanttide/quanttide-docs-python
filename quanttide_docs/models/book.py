@@ -190,7 +190,7 @@ class Book(AbstractContextManager):
             if not os.path.exists(file_abspath):
                 warn(f"TOC文件中配置的`{file_path}`不存在，请检查文件配置是否正确。")
                 continue
-            with Article(file_abspath, self.repo.iter_commits(paths=[file_path])) as article_model:
+            with Article(file_abspath, self.repo.iter_commits(paths=[file_abspath])) as article_model:
                 item.update({'name': article_model.name, 'created_at': article_model.created_at,
                              'updated_at': article_model.updated_at, 'title': article_model.title,
                              'meta': article_model.meta, 'content': article_model.content})
