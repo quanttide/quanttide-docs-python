@@ -5,7 +5,7 @@
 ## 安装
 
 ```shell
-pip install quanttide-docs
+pip install quanttide-docs-python -i https://quanttide-pypi.pkg.coding.net/quanttide-document-engineering/quanttide-docs-python/simple
 ```
 
 ## 用法
