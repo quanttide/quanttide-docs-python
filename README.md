@@ -12,6 +12,12 @@ pip install quanttide-docs
 
 ### 命令行工具
 
+验证教程格式：
+
+```shell
+qtdocs tutorials validate --path=<local_path>
+```
+
 预览教程解析结果：
 
 ```shell

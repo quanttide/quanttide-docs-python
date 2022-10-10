@@ -6,7 +6,6 @@ import os
 import tempfile
 from contextlib import AbstractContextManager
 from typing import Union, List
-from warnings import warn
 
 from git.objects.util import from_timestamp
 import yaml
@@ -198,8 +197,7 @@ class Book(AbstractContextManager):
             file_path = item.pop('file_path')
             file_abspath = os.path.join(self.dir.name, file_path)
             if not os.path.exists(file_abspath):
-                warn(f"TOC文件中配置的`{file_path}`不存在，请检查文件配置是否正确。")
-                continue
+                raise ValueError(f"TOC文件中配置的`{file_path}`不存在，请检查文件配置是否正确。")
             with Article(file_abspath, self.repo.iter_commits(paths=[file_abspath])) as article_model:
                 item.update({'name': article_model.name, 'created_at': article_model.created_at,
                              'updated_at': article_model.updated_at, 'title': article_model.title,

@@ -3,6 +3,7 @@
 """
 from typing import Optional
 from collections import Counter
+from warnings import warn
 
 from quanttide_docs.models.book import Book
 
@@ -12,9 +13,19 @@ class Tutorial(Book):
     教程数据模型
     """
     def validate(self):
-        # 验证lecture_name唯一
+        # 验证`name`非空
+        if not self.name:
+            raise ValueError('教程名称不可为空，请配置_config.yml文件的name属性。')
+        if self.config.get('category') != 'tutorial':
+            # TODO：未来换成raise。
+            warn(f"文档分类不是教程（tutorial），请设置。")
+        # 验证文章
+        for article in self.articles:
+            # 验证标题存在
+            if not article['title']:
+                raise ValueError('教程文章标题不可为空。')
+        # 验证`lecture_name`唯一
         lecture_names = [article['name'] for article in self.articles]
-        # TODO：指路具体错误位置。
         if len(set(lecture_names)) < len(lecture_names):
             counter = Counter(lecture_names)
             duplicated_lecture_names = [k for k, v in counter.items() if v > 1]

@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## [v0.3.0] - 2022-10-
+
+增加命令行工具。
+
+### Features
+
+数据模型：
+- 教程模型`Tutorial`增加`validate`方法
+- 教程模型验证逻辑增加验证`name`属性、`title`属性
+
+命令行：
+- 增加命令行入口。
+- 增加教程格式验证命令`qtdocs tutorial validate`。
+- 增加教程格式解析和预览命令`qtdocs tutorial preview`。
+
 ## [v0.2.1] - 2022-10-10
 
 优化教程模型。

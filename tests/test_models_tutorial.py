@@ -25,17 +25,17 @@ class TutorialsTestCase(unittest.TestCase):
 
     def test_is_valid(self):
         with Tutorial(local_path=self.local_path) as tutorials:
-            tutorials.checkout_version('0.1.0')
+            tutorials.checkout_version('0.1.1')
             self.assertTrue(tutorials.is_valid())
 
     def test_to_dict(self):
         with Tutorial(local_path=self.local_path) as tutorials:
-            course_version = tutorials.to_dict(version='0.1.0')
+            course_version = tutorials.to_dict(version='0.1.1')
             pprint(course_version)
 
     def test_to_dict_without_content(self):
         with Tutorial(local_path=self.local_path) as tutorials:
-            course_version = tutorials.to_dict(version='0.1.0', with_content=False)
+            course_version = tutorials.to_dict(version='0.1.1', with_content=False)
             pprint(course_version)
 
     def test_to_dict_for_head(self):
