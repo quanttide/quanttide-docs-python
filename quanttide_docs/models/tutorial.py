@@ -11,7 +11,7 @@ class Tutorial(Book):
     """
     教程数据模型
     """
-    def is_valid(self) -> bool:
+    def validate(self):
         # 验证lecture_name唯一
         lecture_names = [article['name'] for article in self.articles]
         # TODO：指路具体错误位置。
@@ -19,6 +19,9 @@ class Tutorial(Book):
             counter = Counter(lecture_names)
             duplicated_lecture_names = [k for k, v in counter.items() if v > 1]
             raise ValueError(f"{duplicated_lecture_names}存在重复，请检查文件和文件夹命名。")
+
+    def is_valid(self) -> bool:
+        self.validate()
         return True
 
     def to_dict(self, version: Optional[str] = None, with_content=True):

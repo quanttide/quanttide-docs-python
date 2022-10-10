@@ -30,3 +30,7 @@ file = "LICENSE"
 [project.readme]
 file = "README.md"
 content-type = "text/markdown"
+
+[project.scripts]
+quanttide-docs = "quanttide_docs.cli.__main__:cli"
+qtdocs = "quanttide_docs.cli.__main__:cli"

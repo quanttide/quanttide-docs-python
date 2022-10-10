@@ -45,7 +45,9 @@ class Book(AbstractContextManager):
         :return:
         """
         remote_url = f'https://github.com/quanttide/{depot_name}.git'
-        return cls(remote_url=remote_url)
+        self = cls(remote_url=remote_url)
+        self.depot_name = depot_name
+        return self
 
     @classmethod
     def init_from_coding_devops(cls, project_name, depot_name, username=None, password=None):
@@ -63,7 +65,9 @@ class Book(AbstractContextManager):
         if not username or not password:
             raise ValueError("username 和 password 非空。")
         remote_url = f'https://{username}:{password}@e.coding.net/quanttide/{project_name}/{depot_name}.git'
-        return cls(remote_url=remote_url)
+        self = cls(remote_url=remote_url)
+        self.depot_name = depot_name
+        return self
 
     @classmethod
     def init_from_local_repo(cls, local_path):
@@ -72,7 +76,9 @@ class Book(AbstractContextManager):
         :param local_path:
         :return:
         """
-        return cls(local_path=local_path)
+        self = cls(local_path=local_path)
+        self.local_path = local_path
+        return self
 
     def __enter__(self):
         """
@@ -82,6 +88,7 @@ class Book(AbstractContextManager):
         # 存储仓库的临时文件夹
         # https://docs.python.org/zh-cn/3/library/tempfile.html#tempfile.TemporaryDirectory
         if os.name == 'nt':
+            # bugfix: Windows临时文件可能没有权限，手动分配有权限的目录。
             self.dir = tempfile.TemporaryDirectory(dir=os.path.expandvars(r'%SYSTEMROOT%\Temp'))
         else:
             self.dir = tempfile.TemporaryDirectory()
@@ -120,6 +127,19 @@ class Book(AbstractContextManager):
         return None
 
     @property
+    def name(self) -> str:
+        """
+        唯一标识。用户可通过config配置指定。
+
+        TODO：
+          作为补丁，可默认为仓库名。
+          量潮的习惯是仓库不重名，通常不会有问题。
+          技术上暂不好解决depot_name属性对本地的定义。
+        :return:
+        """
+        return self.config.get('name', None)
+
+    @property
     def created_at(self) -> str:
         """
         定义first commit时间为仓库创建时间。
@@ -128,16 +148,6 @@ class Book(AbstractContextManager):
         """
         first_commit = next(self.repo.iter_commits(reverse=True))
         return first_commit.committed_datetime.isoformat()
-
-    def checkout_version(self, version):
-        """
-        TODO：
-          - 验证version格式为语义化版本，以防止意料之外的操作。
-          - 拓展对version的定义包括tag和commit。
-        :param version:
-        :return:
-        """
-        self.repo.git.checkout(version)
 
     @property
     def updated_at(self) -> str:
@@ -196,3 +206,13 @@ class Book(AbstractContextManager):
                              'meta': article_model.meta, 'content': article_model.content})
                 articles.append(item)
         return articles
+
+    def checkout_version(self, version):
+        """
+        TODO：
+          - 验证version格式为语义化版本，以防止意料之外的操作。
+          - 拓展对version的定义包括tag和commit。
+        :param version:
+        :return:
+        """
+        self.repo.git.checkout(version)
