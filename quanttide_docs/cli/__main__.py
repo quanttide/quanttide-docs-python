@@ -27,7 +27,7 @@ cli = typer.Typer()
 # https://typer.tiangolo.com/tutorial/subcommands/add-typer/
 
 # 教程工具
-cli.add_typer(tutorial_cli, name='tutorials')
+cli.add_typer(tutorial_cli, name='tutorial')
 
 
 if __name__ == '__main__':
