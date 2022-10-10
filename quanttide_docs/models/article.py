@@ -22,7 +22,11 @@ class Article(AbstractContextManager):
         :param commits: 文件关联Commit对象，按时间顺序从最近到最远排列
         """
         self.abspath = abspath
+        if not os.path.exists(self.abspath):
+            raise ValueError(f"文件地址不存在，请检查文件路径{self.abspath}配置是否正确。")
         self.commits = tuple(commits)  # generator -> tuple
+        if not self.commits:
+            raise ValueError(f"文件提交为空，请检查文件路径{self.abspath}配置是否正确。")
 
     def __enter__(self):
         self.fp = open(self.abspath, 'r', encoding='utf-8')
@@ -96,8 +100,7 @@ class Article(AbstractContextManager):
     @property
     def content(self):
         """
-        TODO: 根据业务系统需要进行优化
-        :return:
+        正文内容，移除Meta和Title。
         """
         lines = self.raw.split('\n')
         if lines[0] == '---':

@@ -28,8 +28,15 @@ class ArticleTestCase(unittest.TestCase):
         self.dir.cleanup()
 
     def test_init(self):
+        # 正常
         article = Article(self.abspath, self.commits)
         self.assertTrue(hasattr(article, 'abspath'))
+        # 异常
+        # TODO：可进一步完善，判断异常报文。
+        with self.assertRaises(ValueError) as e:
+            article = Article('/tmp/error_path', self.commits)
+        with self.assertRaises(ValueError) as e:
+            article = Article(self.abspath, [])
 
     def test_context_manager(self):
         with Article(self.abspath, self.commits) as article:
@@ -72,7 +79,17 @@ class ArticleTestCase(unittest.TestCase):
 
     def test_content(self):
         with Article(self.abspath, self.commits) as article:
-            self.assertEqual(article.content, '')
+            article.raw = """---
+stage: alpha
+---
+
+# 测试样例
+
+这是一个测试样例。
+"""
+            self.assertEqual(article.content, """
+这是一个测试样例。
+""")
 
 
 if __name__ == '__main__':
