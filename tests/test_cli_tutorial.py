@@ -25,7 +25,7 @@ class TutorialsCommandsTestCase(unittest.TestCase):
         """
         qtdocs tutorials preview --path=<local_path>
         """
-        result = self.runner.invoke(cli, ['tutorials', 'validate', f'--path={settings.TEST_LOCAL_PATH}'])
+        result = self.runner.invoke(cli, ['tutorial', 'validate', f'--path={settings.TEST_LOCAL_PATH}'])
         self.assertEqual(0, result.exit_code)
         self.assertIn(f'课程名称：{settings.TEST_COURSE_NAME}', result.stdout)
 
@@ -33,7 +33,7 @@ class TutorialsCommandsTestCase(unittest.TestCase):
         """
         qtdocs tutorials preview --path=<local_path>
         """
-        result = self.runner.invoke(cli, ['tutorials', 'preview', f'--path={settings.TEST_LOCAL_PATH}'])
+        result = self.runner.invoke(cli, ['tutorial', 'preview', f'--path={settings.TEST_LOCAL_PATH}'])
         self.assertEqual(0, result.exit_code)
         self.assertIn(f'课程名称：{settings.TEST_COURSE_NAME}', result.stdout)
 
