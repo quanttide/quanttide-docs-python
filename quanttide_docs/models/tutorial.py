@@ -66,5 +66,6 @@ class Tutorial(Book):
                     {key: value for key, value in article['meta'].items() if key in ['level', 'stage']})
             if with_content:
                 lecture['content'] = article['content']
+                lecture['images'] = article['images']
             course['lectures'].append(lecture)
         return course

@@ -190,6 +190,11 @@ class Book(AbstractContextManager):
     def articles(self) -> List[dict]:
         """
         文章列表
+
+        TODO:
+          - 返回类型改为`List[Article]`，以方便在上层直接使用Article模型。
+            目前的字典格式需要在每次更新Article模型以后都更新这里的逻辑，可维护性比较差。
+            文档规范的领域模型也对应规范。
         :return:
         """
         articles = []
@@ -201,7 +206,8 @@ class Book(AbstractContextManager):
             with Article(file_abspath, self.repo.iter_commits(paths=[file_abspath])) as article_model:
                 item.update({'name': article_model.name, 'created_at': article_model.created_at,
                              'updated_at': article_model.updated_at, 'title': article_model.title,
-                             'meta': article_model.meta, 'content': article_model.content})
+                             'meta': article_model.meta, 'content': article_model.content,
+                             'images': article_model.images})
                 articles.append(item)
         return articles
 

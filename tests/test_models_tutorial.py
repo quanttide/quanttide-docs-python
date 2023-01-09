@@ -31,6 +31,7 @@ class TutorialsTestCase(unittest.TestCase):
     def test_to_dict(self):
         with Tutorial(local_path=self.local_path) as tutorials:
             course_version = tutorials.to_dict(version='0.1.1')
+            self.assertTrue('images' in course_version['lectures'][0])
             pprint(course_version)
 
     def test_to_dict_without_content(self):
