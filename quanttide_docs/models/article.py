@@ -2,6 +2,7 @@
 文章(Article)数据模型
 """
 
+import re
 import os.path
 from contextlib import AbstractContextManager
 from typing import Optional
@@ -116,3 +117,13 @@ class Article(AbstractContextManager):
             if line.startswith('#') and line.count('#') == 1:
                 return '\n'.join(lines[i + 1:])
         return self.raw
+
+    @property
+    def images(self) -> list[dict]:
+        """
+        图片资源。
+        :return: [{'alt': '测试图片', 'src':'images/example.jpg'}]
+        """
+        pattern = r'!\[(?P<alt>.*)\]\((?P<src>.+)\)'
+        matched = re.findall(pattern, self.content)
+        return [{'alt': item[0], 'src': item[1]} for item in matched] if matched else []

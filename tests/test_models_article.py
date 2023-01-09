@@ -91,6 +91,23 @@ stage: alpha
 这是一个测试样例。
 """)
 
+    def test_images(self):
+        with Article(self.abspath, self.commits) as article:
+            article.raw = """
+# 图片解析测试样例
+
+![测试图片](image/example.jpg)
+"""
+            self.assertDictEqual(article.images[0], {'alt': '测试图片', 'src': 'image/example.jpg'})
+
+    def test_images_empty(self):
+        with Article(self.abspath, self.commits) as article:
+            article.raw = """
+# 图片解析测试样例
+
+"""
+            self.assertFalse(article.images)
+
 
 if __name__ == '__main__':
     unittest.main()
