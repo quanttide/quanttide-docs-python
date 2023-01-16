@@ -126,4 +126,20 @@ class Article(AbstractContextManager):
         """
         pattern = r'!\[(?P<alt>.*)\]\((?P<src>.+)\)'
         matched = re.findall(pattern, self.content)
-        return [{'alt': item[0], 'src': item[1]} for item in matched] if matched else []
+        return [{'alt': item[0], 'src': self.get_file_abspath(item[1])} for item in matched] if matched else []
+
+    def get_file_abspath(self, relative_path):
+        """
+        获取文件相对当前Article文件的绝对路径。
+        
+        :param relative_path: 
+        :return: 
+        """
+        cwd = os.getcwd()
+        # 临时改一下CWD
+        os.chdir(os.path.dirname(self.abspath))
+        file_abspath = os.path.abspath(relative_path)
+        # 改回来，防止影响其他程序
+        os.chdir(cwd)
+        return file_abspath
+    

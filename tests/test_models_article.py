@@ -98,7 +98,8 @@ stage: alpha
 
 ![测试图片](image/example.jpg)
 """
-            self.assertDictEqual(article.images[0], {'alt': '测试图片', 'src': 'image/example.jpg'})
+            self.assertDictEqual(article.images[0], {'alt': '测试图片', 'src': article.get_file_abspath('image/example.jpg')})
+            # print(article.images[0]['src'])
 
     def test_images_not_exists(self):
         with Article(self.abspath, self.commits) as article:
@@ -130,7 +131,7 @@ stage: alpha
 
 ![](image/example.jpg)
 """
-            self.assertDictEqual(article.images[0], {'alt': '', 'src': 'image/example.jpg'})
+            self.assertDictEqual(article.images[0], {'alt': '', 'src': article.get_file_abspath('image/example.jpg')})
 
 
 if __name__ == '__main__':
