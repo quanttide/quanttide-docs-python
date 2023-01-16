@@ -8,6 +8,7 @@
 
 领域模型：
 - `Article`增加`images`属性。
+- `Tutorial.to_dict`增加`images`属性。
 
 ## [v0.3.0] - 2022-10-10
 
